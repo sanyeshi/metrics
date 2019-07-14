@@ -1,0 +1,13 @@
+{
+  "index_patterns": ["metrics-*"],
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "keyword"
+      },
+      "host": {
+        "type": "keyword"
+      }
+    }
+  }
+}

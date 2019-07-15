@@ -13,18 +13,25 @@ public class ConsoleReporter extends ScheduledReporter{
 	@Override
 	public void report(Map<String,Meter> meterMap,
 			Map<String, Timer> timerMap) {
+		
+		System.out.println(String.format("\n%-30s %-10s %-5s %-5s %-5s %-5s",
+				"date","name","count","max","min","avg"));
 		for(Entry<String, Meter> entry:meterMap.entrySet()) {
-			System.out.println(String.format("%s %s %d",
+			System.out.println(String.format("%-30s %-10s %-5d",
 					new Date(),
 					entry.getKey(),
 					entry.getValue().getCount()));
 		}
+		
+		
 		for(Entry<String, Timer> entry:timerMap.entrySet()) {
-			System.out.println(String.format("%s %s %d %f",
+			System.out.println(String.format("%-30s %-10s %-5d %-5d %-5d %-3.2f",
 					new Date(),
 					entry.getKey(),
 					entry.getValue().getCount(),
-					entry.getValue().getAvgTime()
+					entry.getValue().getMax(),
+					entry.getValue().getMin(),
+					entry.getValue().getAvg()
 					));
 		}
 		

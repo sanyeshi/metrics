@@ -9,7 +9,7 @@
 		<artifactId>metrics</artifactId>
 		<version>0.0.1</version>
 	</parent>
-	
+
 	<artifactId>metrics-core</artifactId>
 	<name>metrics-core</name>
 
@@ -26,6 +26,11 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.dropwizard.metrics</groupId>
+			<artifactId>metrics-core</artifactId>
+			<version>4.1.0</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -283,8 +283,11 @@ public class ElasticsearchReporter extends ScheduledReporter {
 
 		@Override
 		public void format(StringBuilder builder, Timer timer) {
-			builder.append(",").append("\"count\":").append(timer.getCount())
-			.append(",").append("\"avgTime\":").append(formatJson(timer.getAvgTime()));
+			builder.append(",\"count\":").append(timer.getCount())
+			.append(",\"max\":").append(timer.getMax())
+			.append(",\"min\":").append(timer.getMin())
+			.append(",\"avg\":").append(formatJson(timer.getAvg()))
+			.append(",\"sum\":").append(timer.getSum());
 		}
 	}
 }

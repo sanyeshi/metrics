@@ -35,7 +35,7 @@ public class ElasticsearchReporterTest {
 		Timer timer=registry.timber("timber");
 		for (int i = 0; i < 100000; i++) {
 			timer.start();
-			Thread.sleep(random.nextInt(5));
+			Thread.sleep(2+random.nextInt(5));
 			timer.stop();
 			//meter.mark();
 		}
@@ -59,7 +59,7 @@ public class ElasticsearchReporterTest {
 		Timer timer=registry.timber("timber");
 		for (int i = 0; i < 100000; i++) {
 			timer.start();
-			Thread.sleep(random.nextInt(3));
+			Thread.sleep(1+random.nextInt(3));
 			timer.stop();
 			//meter.mark();
 		}

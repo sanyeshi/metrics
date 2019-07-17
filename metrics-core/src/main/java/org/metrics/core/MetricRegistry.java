@@ -3,6 +3,8 @@ package org.metrics.core;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.codahale.metrics.Clock;
+
 public class MetricRegistry {
 	
 	private ConcurrentMap<String, Meter> meterMap=new ConcurrentHashMap<String, Meter>(64);

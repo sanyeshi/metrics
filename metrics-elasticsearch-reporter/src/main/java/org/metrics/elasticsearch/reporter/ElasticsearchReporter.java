@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.metric.transport.http.ConsoleSender;
 import org.metric.transport.http.HttpSender;
-import org.metrics.core.Clock;
 import org.metrics.core.ConsoleReporter;
 import org.metrics.core.Meter;
 import org.metrics.core.MetricRegistry;
@@ -24,6 +23,9 @@ import org.metrics.util.IPUtil;
 import org.metrics.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.codahale.metrics.Clock;
+import com.codahale.metrics.Snapshot;
 
 public class ElasticsearchReporter extends ScheduledReporter {
 
@@ -218,7 +220,7 @@ public class ElasticsearchReporter extends ScheduledReporter {
 	}
 	
 	private String formatJson(double val) {
-		return String.format("%2.2f", val);
+		return String.format("%10.2f", val).trim();
 	}
 
 	private <T> String getIndexName(String timestamp, T t) {
@@ -275,7 +277,12 @@ public class ElasticsearchReporter extends ScheduledReporter {
 
 		@Override
 		public void format(StringBuilder builder, Meter meter) {
-			builder.append(",").append("\"count\":").append(meter.getCount());
+			builder.append(",\"count\":").append(meter.getCount())
+			.append(",\"rate\":").append(meter.getRate())
+			.append(",\"meanRate\":").append(formatJson(meter.getMeanRate()))
+			.append(",\"m1Rate\":").append(formatJson(meter.getOneMinuteRate()))
+			.append(",\"m5Rate\":").append(formatJson(meter.getFiveMinuteRate()))
+			.append(",\"m15Rate\":").append(formatJson(meter.getFifteenMinuteRate()));
 		}
 	}
 
@@ -283,11 +290,21 @@ public class ElasticsearchReporter extends ScheduledReporter {
 
 		@Override
 		public void format(StringBuilder builder, Timer timer) {
+			Snapshot snapshot=timer.getSnapshot();
 			builder.append(",\"count\":").append(timer.getCount())
+			.append(",\"rate\":").append(timer.getRate())
+			.append(",\"meanRate\":").append(formatJson(timer.getMeanRate()))
+			.append(",\"m1Rate\":").append(formatJson(timer.getOneMinuteRate()))
+			.append(",\"m5Rate\":").append(formatJson(timer.getFiveMinuteRate()))
+			.append(",\"m15Rate\":").append(formatJson(timer.getFifteenMinuteRate()))
 			.append(",\"max\":").append(timer.getMax())
 			.append(",\"min\":").append(timer.getMin())
 			.append(",\"avg\":").append(formatJson(timer.getAvg()))
-			.append(",\"sum\":").append(timer.getSum());
+			.append(",\"p75\":").append(formatJson(snapshot.get75thPercentile()))
+			.append(",\"p95\":").append(formatJson(snapshot.get95thPercentile()))
+			.append(",\"p98\":").append(formatJson(snapshot.get98thPercentile()))
+			.append(",\"p99\":").append(formatJson(snapshot.get99thPercentile()))
+			.append(",\"p999\":").append(formatJson(snapshot.get999thPercentile()));
 		}
 	}
 }

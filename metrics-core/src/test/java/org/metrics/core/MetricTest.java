@@ -16,9 +16,9 @@ public class MetricTest {
 		Meter meter=registry.meter("meter");
 		Timer timer=registry.timber("timer");
 		Random random=new Random();
-		for(int i=0;i<1000;i++) {
+		for(int i=0;i<10000;i++) {
 			timer.start();
-			Thread.sleep(random.nextInt(100));
+			Thread.sleep(random.nextInt(50));
 			timer.stop();
 			meter.mark();
 		}

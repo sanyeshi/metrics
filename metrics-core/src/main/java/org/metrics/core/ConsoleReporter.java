@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.codahale.metrics.Snapshot;
+
 public class ConsoleReporter extends ScheduledReporter{
 
 	public  ConsoleReporter(MetricRegistry registry) {
@@ -14,25 +16,54 @@ public class ConsoleReporter extends ScheduledReporter{
 	public void report(Map<String,Meter> meterMap,
 			Map<String, Timer> timerMap) {
 		
-		System.out.println(String.format("\n%-30s %-10s %-5s %-5s %-5s %-5s",
-				"date","name","count","max","min","avg"));
+		Date date=new Date();
+		
+		System.out.println(String.format("--Meter--\n%-30s %-10s %-5s %-5s %-10s %-10s %-10s %-10s",
+				"date","name","count","rate","meanRate","m1Rate","m5Rate","m15Rate"));
 		for(Entry<String, Meter> entry:meterMap.entrySet()) {
-			System.out.println(String.format("%-30s %-10s %-5d",
-					new Date(),
-					entry.getKey(),
-					entry.getValue().getCount()));
+			String name=entry.getKey();
+			Meter meter=entry.getValue();
+			System.out.println(String.format("%-30s %-10s %-5d %-5d %-10.3f %-10.3f %-10.3f %-10.3f",
+					date,
+					name,
+					meter.getCount(),
+					meter.getRate(),
+					meter.getMeanRate(),
+					meter.getOneMinuteRate(),
+					meter.getFiveMinuteRate(),
+					meter.getFifteenMinuteRate()
+					));
 		}
 		
 		
+		System.out.println(String.format("--Timer--\n%-30s %-10s %-5s %-5s %-10s %-10s %-10s %-10s "
+				+ "%-5s %-5s %-10s %-10s %-10s %-10s",
+				"date","name","count","rate","meanRate",
+				"m1Rate","m5Rate","m15Rate","max","min","avg",
+				"p95","p98","p99"));
 		for(Entry<String, Timer> entry:timerMap.entrySet()) {
-			System.out.println(String.format("%-30s %-10s %-5d %-5d %-5d %-3.2f",
-					new Date(),
-					entry.getKey(),
-					entry.getValue().getCount(),
-					entry.getValue().getMax(),
-					entry.getValue().getMin(),
-					entry.getValue().getAvg()
+			String name=entry.getKey();
+			Timer timer=entry.getValue();
+			Snapshot snapshot=timer.getSnapshot();
+			
+			System.out.println(String.format("%-30s %-10s %-5d %-5d %-10.3f %-10.3f %-10.3f %-10.3f "
+					+ "%-5d %-5d %-10.3f %-10.3f %-10.3f %-10.3f ",
+					date,
+					name,
+					timer.getCount(),
+					timer.getRate(),
+					timer.getMeanRate(),
+					timer.getOneMinuteRate(),
+					timer.getFiveMinuteRate(),
+					timer.getFifteenMinuteRate(),
+					timer.getMax(),
+					timer.getMin(),
+					timer.getAvg(),
+					snapshot.get95thPercentile(),
+					snapshot.get98thPercentile(),
+					snapshot.get99thPercentile()
 					));
+			
 		}
 		
 	}
